@@ -1,0 +1,102 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#0b4f8a">
+<title>Opening Manager Checklist</title>
+<style>
+:root{--blue:#0b4f8a;--bg:#f4f7fa;--card:#fff;--text:#17212b;--muted:#687684;--line:#dbe4ec;--good:#16784a;--warn:#fff4cc}
+*{box-sizing:border-box} body{margin:0;font-family:system-ui,-apple-system,Segoe UI,Roboto,sans-serif;background:var(--bg);color:var(--text)}
+header{position:sticky;top:0;z-index:10;background:var(--blue);color:white;padding:14px 16px 12px;box-shadow:0 2px 8px #0002}
+h1{font-size:18px;margin:0 0 8px}.sub{font-size:12px;opacity:.9;margin-bottom:9px}
+.progressRow{display:flex;gap:10px;align-items:center}.bar{height:9px;background:#ffffff45;border-radius:99px;overflow:hidden;flex:1}.fill{height:100%;width:0;background:white;transition:.2s}.count{font-size:12px;font-weight:700;min-width:82px;text-align:right}
+main{max-width:720px;margin:auto;padding:12px 12px 100px}
+.reminders{background:var(--warn);border:1px solid #ead47c;border-radius:14px;padding:12px;margin-bottom:12px;font-size:13px;line-height:1.45}
+.section{background:var(--card);border:1px solid var(--line);border-radius:16px;margin:0 0 12px;overflow:hidden;box-shadow:0 1px 3px #0000000c}
+.secHead{padding:13px 14px;background:#eaf3fa;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer}
+.time{font-size:12px;font-weight:800;color:var(--blue)}.name{font-size:15px;font-weight:800;margin-top:2px}.secCount{font-size:12px;color:var(--muted);white-space:nowrap}
+.tasks{padding:3px 10px}
+.task{display:flex;gap:11px;align-items:flex-start;padding:11px 3px;border-bottom:1px solid #edf1f4;cursor:pointer}.task:last-child{border-bottom:0}
+.task input{width:24px;height:24px;min-width:24px;margin:0;accent-color:var(--good)}.task span{font-size:15px;line-height:1.35;padding-top:1px}
+.task.done span{text-decoration:line-through;color:#89949e}.critical span{font-weight:750}
+.controls{position:fixed;bottom:0;left:0;right:0;background:#ffffffee;backdrop-filter:blur(10px);border-top:1px solid var(--line);padding:10px max(12px,env(safe-area-inset-right)) calc(10px + env(safe-area-inset-bottom)) max(12px,env(safe-area-inset-left));display:flex;gap:8px;justify-content:center}
+button{border:0;border-radius:12px;padding:12px 15px;font-weight:750;font-size:14px}.primary{background:var(--blue);color:white}.secondary{background:#e6edf3;color:#25313b}
+textarea{width:100%;min-height:105px;border:1px solid var(--line);border-radius:12px;padding:11px;font:inherit;resize:vertical}
+.noteCard{background:white;border:1px solid var(--line);border-radius:16px;padding:13px}.noteCard h2{font-size:15px;margin:0 0 9px}
+.hidden .tasks{display:none}.hidden .secHead{border-bottom:0}
+#complete{display:none;background:#e7f7ef;border:1px solid #b9e3ce;color:#12623d;border-radius:14px;padding:12px;margin-bottom:12px;font-weight:800;text-align:center}
+</style>
+</head>
+<body>
+<header>
+<h1>Opening Manager Checklist</h1>
+<div class="sub">Manager in 7:00 AM • Doors open 10:00 AM • Progress saves automatically</div>
+<div class="progressRow"><div class="bar"><div class="fill" id="fill"></div></div><div class="count" id="count">0 / 0 done</div></div>
+</header>
+<main>
+<div id="complete">✓ Opening checklist complete — ready for the first guest.</div>
+<div class="reminders"><b>DON'T FORGET:</b> Oil vats • Fryer oil • Custard assembly/sanitation • Flavor of the Day • Teas • Temperature logs • Tills • Headsets/batteries • Ice • BIBs • Restrooms • Call-offs • Final walk</div>
+<div id="app"></div>
+<div class="noteCard"><h2>Opening Notes / Issues</h2><textarea id="notes" placeholder="Equipment issues, shortages, call-offs, follow-up items…"></textarea></div>
+</main>
+<div class="controls">
+<button class="secondary" id="collapse">Collapse Done</button>
+<button class="primary" id="reset">New Opening / Reset</button>
+</div>
+<script>
+const DATA = [{"time": "7:00\u20137:15", "name": "Arrival & Building Check", "tasks": ["Clock in / alarm / required lights", "Read manager log and closing notes", "Check schedule, opening crew, call-offs and coverage", "Walk building for overnight problems, leaks, alarms or unusual conditions", "Check walk-in cooler temperature", "Check freezer temperature", "Check other required refrigeration temperatures", "Verify closing crew completed required closing duties", "Check restrooms and dining room", "Check exterior, entrance and parking lot", "Check hand sinks for soap and paper towels", "Verify dish area is operational", "Start required opening logs", "List anything that MUST be corrected before 10:00"]}, {"time": "7:15\u20137:45", "name": "Porter & Equipment Verification", "tasks": ["Hood / vent areas cleaned", "Hood filters cleaned and correctly reinstalled", "Grill cleaned and ready for startup", "Fryers cleaned / filtered per store procedure", "Fryer components correctly reassembled", "Oil vats / reservoirs checked and sufficiently filled", "Used-oil system checked", "Correct fryer oil levels", "Drain valves confirmed closed before heating", "Filtration equipment assembled / ready", "Grill and fryer floors clean", "Floor drains checked / cleaned", "Mats clean and positioned", "Trash handled", "Restrooms cleaned and stocked", "Exterior / sidewalk / entrance checked", "Ask porter about anything broken, leaking, clogged or unusual"]}, {"time": "7:45\u20138:15", "name": "Custard Machine", "tasks": ["Confirm machine and parts were cleaned / sanitized per procedure", "Gather all required machine parts", "Assemble internal components according to store / manufacturer procedure", "Install seals, O-rings and gaskets correctly", "Use approved food-grade lubricant only where required", "Install dispensing components", "Verify components are seated / locked correctly", "Install drip trays", "Complete required sanitizing procedure", "Drain sanitizer according to procedure", "Add custard mix", "Start machine and verify normal operation", "Check for leaks", "Verify freezing and consistency", "Vanilla ready", "Chocolate ready, if applicable", "Flavor of the Day ingredients / setup ready", "Backup custard mix available", "Complete required custard temperature / opening log"]}, {"time": "8:15\u20138:30", "name": "Tea & Beverages", "tasks": ["Unsweet tea brewed", "Sweet tea brewed", "Tea labeled / time-marked per store procedure", "Tea urns clean and positioned", "Lemonade / specialty beverages prepared", "Fountain nozzles and diffusers clean / installed", "Fountain system working", "Check BIB syrup levels and replace low / empty boxes", "Ice bins filled", "Ice scoop properly stored", "Cups stocked", "Lids stocked", "Straws stocked", "Drink carriers stocked"]}, {"time": "8:30\u20139:00", "name": "Kitchen Startup", "tasks": ["Verify fryer oil level again before heating", "Fryers powered on at required time and heating normally", "No fryer / oil leaks", "Fry baskets clean and ready", "Timers / screens functioning", "Fry station stocked with product and backups", "Grill powered on and reaching operating temperature", "Grill utensils, scrapers, spatulas and tongs ready", "Bun toaster / bun equipment on and functioning", "Hot-holding equipment on and functioning", "Beef, chicken, fish, cheese and buns stocked", "Station sanitizer prepared / verified"]}, {"time": "9:00\u20139:20", "name": "Front, Drive-Thru & Sundae Bar", "tasks": ["POS systems on and registers logged in", "Tills installed / starting cash verified per store policy", "Receipt printers working and paper stocked", "Headsets working", "Headset batteries charged; backups charging", "Test drive-thru communication", "Bags, napkins and condiments stocked", "Cups, lids, straws and drink carriers stocked", "Drive-thru window clean", "Flavor of the Day ready", "Hot fudge and caramel ready", "Toppings / candy bins stocked", "Whipped cream and cherries stocked", "Sundae, concrete and shake cups / lids stocked", "Spoons and dessert tools stocked", "Mixer equipment clean and ready", "Backup dessert product available", "Sundae counter clean and sanitizer ready"]}, {"time": "9:20\u20139:35", "name": "Food, Stock & Safety Check", "tasks": ["Beef / chicken / fish", "Fries / cheese curds / onion rings / other fryer products", "Buns and cheese", "Lettuce / tomatoes / onions / pickles", "Sauces and condiments", "Custard mix and Flavor of the Day supplies", "Cups / lids / bags / napkins / gloves", "Cleaning and sanitizing supplies", "FIFO checked", "Date labels checked", "Expired product removed", "Raw and ready-to-eat foods stored correctly", "Required food / equipment temperatures completed", "Required logs completed"]}, {"time": "9:35\u20139:50", "name": "Manager Final Walk", "tasks": ["Kitchen ready", "Fryers hot and ready", "Grill hot and ready", "Custard ready", "Tea / fountain / ice ready", "Food and backups stocked", "Front counter stocked", "Drive-thru ready", "Dining room clean and guest-ready", "Tables / chairs / booths clean", "Trash empty", "Restrooms clean and stocked", "Entrance / glass acceptable", "Exterior acceptable", "No slip / trip hazards", "All required temperatures and opening paperwork complete"]}, {"time": "9:50\u201310:00", "name": "People & Open", "tasks": ["Everyone who should be present is clocked in", "Positions / deployment assigned", "Everyone knows their station", "Call-offs / missing positions covered", "Uniform / appearance issues handled", "Handwashing completed before food handling", "Registers and tills ready", "Kitchen can take an immediate order", "Drive-thru can take an immediate order", "Custard can take an immediate order", "Unlock / open doors at required time", "10:00 AM \u2014 READY FOR FIRST GUEST"]}];
+const criticalWords=["oil vat","fryer oil","custard","tea","temperature","till","headset","BIB","restroom","call-off","Flavor of the Day"];
+const key="culversOpeningChecklistV1", noteKey="culversOpeningNotesV1";
+let state=JSON.parse(localStorage.getItem(key)||"{}");
+const app=document.getElementById("app");
+let total=0;
+DATA.forEach((s,si)=>{
+ const sec=document.createElement("section"); sec.className="section"; sec.dataset.section=si;
+ const head=document.createElement("div"); head.className="secHead";
+ head.innerHTML=`<div><div class="time">${s.time} AM</div><div class="name">${s.name}</div></div><div class="secCount" id="sc${si}"></div>`;
+ head.onclick=()=>sec.classList.toggle("hidden");
+ const tasks=document.createElement("div"); tasks.className="tasks";
+ s.tasks.forEach((txt,ti)=>{
+  total++; const id=`${si}-${ti}`;
+  const label=document.createElement("label"); label.className="task";
+  if(criticalWords.some(w=>txt.toLowerCase().includes(w.toLowerCase()))) label.classList.add("critical");
+  const cb=document.createElement("input"); cb.type="checkbox"; cb.checked=!!state[id];
+  const span=document.createElement("span"); span.textContent=txt;
+  label.append(cb,span); if(cb.checked) label.classList.add("done");
+  cb.onchange=()=>{state[id]=cb.checked;localStorage.setItem(key,JSON.stringify(state));label.classList.toggle("done",cb.checked);update()};
+  tasks.append(label);
+ });
+ sec.append(head,tasks); app.append(sec);
+});
+function update(){
+ let done=0;
+ DATA.forEach((s,si)=>{
+  let sd=0; s.tasks.forEach((_,ti)=>{if(state[`${si}-${ti}`]){done++;sd++;}});
+  document.getElementById(`sc${si}`).textContent=`${sd}/${s.tasks.length}`;
+ });
+ document.getElementById("count").textContent=`${done} / ${total} done`;
+ document.getElementById("fill").style.width=`${done/total*100}%`;
+ document.getElementById("complete").style.display=done===total?"block":"none";
+}
+const notes=document.getElementById("notes"); notes.value=localStorage.getItem(noteKey)||"";
+notes.oninput=()=>localStorage.setItem(noteKey,notes.value);
+document.getElementById("collapse").onclick=()=>{
+ document.querySelectorAll(".section").forEach((sec,si)=>{
+  const all=DATA[si].tasks.every((_,ti)=>state[`${si}-${ti}`]);
+  if(all) sec.classList.add("hidden");
+ });
+};
+document.getElementById("reset").onclick=()=>{
+ if(confirm("Start a new opening? This clears all checks and notes.")){
+  state={}; localStorage.removeItem(key); localStorage.removeItem(noteKey); notes.value="";
+  document.querySelectorAll('input[type="checkbox"]').forEach(c=>c.checked=false);
+  document.querySelectorAll(".task").forEach(x=>x.classList.remove("done"));
+  document.querySelectorAll(".section").forEach(x=>x.classList.remove("hidden"));
+  update(); window.scrollTo({top:0,behavior:"smooth"});
+ }
+};
+update();
+</script>
+</body>
+</html>
